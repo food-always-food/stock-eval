@@ -1,0 +1,1 @@
+# Inital Stock Picking Tool

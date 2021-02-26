@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&family=Poppins&display=swap');
+
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+
+h1 h2 h3 {
+    font-family: 'Poppins', sans-serif;
+}
+
+#middle {
+    text-align: center;
+}

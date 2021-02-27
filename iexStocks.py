@@ -2,9 +2,9 @@ import pandas as pd
 from iexfinance.refdata import get_exchange_symbols, get_iex_symbols, get_region_symbols
 from iexfinance.stocks import get_historical_data, Stock
 
-import pandas as pd
-from iexfinance.refdata import get_exchange_symbols, get_iex_symbols, get_region_symbols
-from iexfinance.stocks import get_historical_data, Stock
+
+stockInformation = Stock(x,token='Tsk_edf1d929fca64efa833d73000d85c60c)
+
 
 # Note that current ENV varriable has this working on IEX Sandbox 
 

@@ -12,7 +12,7 @@ def welcome():
     if request.method == "POST":
         req = request.form
         print(req)
-        result = iexStocks.getFinancials(req['symbol'],req['pe'])
+        result = iexStocks.getFinancials(req['symbol'].upper(),req['pe'])
         print(result)
         session['result'] = result
         return render_template("index.html")

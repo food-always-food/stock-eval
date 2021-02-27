@@ -4,28 +4,40 @@ from iexfinance.stocks import get_historical_data, Stock
 from datetime import date, timedelta
 from pandas.tseries.offsets import BDay
 
+token = 'Tsk_edf1d929fca64efa833d73000d85c60c'
 
-def getFinancials(symbol):
+def getFinancials(symbol,pe):
+    result = {}
     now = date.today() - BDay(1)
-    print(now.strftime('%Y-%m-%d'))
-    mostRecent = get_historical_data(symbol, now, now,token='Tsk_edf1d929fca64efa833d73000d85c60c')
-    print(mostRecent.loc[now.strftime('%Y-%m-%d')].close)
-    print(mostRecent.loc[now.strftime('%Y-%m-%d')].volume)
     fourYearsAgo = now - BDay(1460)
-    print(fourYearsAgo)
-    historic = get_historical_data(symbol, fourYearsAgo, fourYearsAgo, token='Tsk_edf1d929fca64efa833d73000d85c60c')
-    print(historic)
-    stockInformation = Stock(symbol,token='Tsk_edf1d929fca64efa833d73000d85c60c')
-    company = stockInformation.get_company()
-    financials = stockInformation.get_financials()
+    historic = get_historical_data(symbol, fourYearsAgo, fourYearsAgo, token=token)
+    stockInformation = Stock(symbol,token=token)
+    financials = stockInformation.get_financials(period='annual')
     quote = stockInformation.get_quote()
-    print(financials.iloc[0])
-    print(company.loc[symbol])
-    print(quote.loc[symbol])
-    return None
+    information = stockInformation.get_key_stats()
+    companyDesc = stockInformation.get_company()
+    result['price'] = quote.loc[symbol].close
+    result['company'] = information.loc[symbol].companyName
+    result['peRatio'] = information.loc[symbol].peRatio
+    result['volume'] = information.loc[symbol].avg30Volume
+    result['yield'] = information.loc[symbol].dividendYield
+    result['bookValue'] = bookValue(financials.iloc[0].shareholderEquity,pe,information.loc[symbol].sharesOutstanding)
+    result['opMargin'] = operatingMargin(financials.iloc[0].operatingIncome,financials.iloc[0].revenue)
+    result['4yrPrice'] = historic.loc[fourYearsAgo.strftime('%Y-%m-%d')].close
+    result['description'] = companyDesc.loc[symbol].description
+    return result
 
-test = getFinancials("AAPL")
+def bookValue(se,pe,cs):
+    if type(pe) == type(1) and pe != 0:
+        value = (se-pe)/cs
+        return value
+    else:
+        value = se/cs
+        return value
 
+def operatingMargin(opr,rev):
+    result = opr / rev
+    return result
 
 # mostRecent = get_historical_data("AAPL", now, now,  output_format='json',token='Tsk_edf1d929fca64efa833d73000d85c60c')
 # fourYearsAgo = get_historical_data("AAPL",yearAgo,yearAgo, token='Tsk_edf1d929fca64efa833d73000d85c60c')

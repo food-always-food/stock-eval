@@ -13,10 +13,6 @@ def welcome():
         print(req)
         return render_template("index.html")
     else:
-        page = {
-            "title": "Welcome to Castle Braumburg",
-            "background": "welcome/castle.jpg",
-        }
         return render_template("index.html")
 
 

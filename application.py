@@ -1,5 +1,5 @@
 from flask import render_template, session, request, redirect, Flask
-import imdScore
+import imdScore, iexStocks
 
 application = Flask(__name__)
 # application.config['SECRET_KEY'] = os.environ['SECRET_KEY']

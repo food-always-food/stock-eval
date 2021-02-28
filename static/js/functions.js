@@ -7,34 +7,46 @@ $(document).ready(function () {
         socket.emit('joined', {
             data: window.location.pathname
         });
+        $('#submit').click(function () {
+            console.log("Click");
+            $('.container').append(`    <div class="row">
+            <div class="col-md">
+              <p id="middle">Loading...</p>
+            </div>
+          </div>`);
+        });
+        $("#symbol").focusout(function () {
+            var value = $(this).val();
+            getSymbol(value);
+        });
+        // $(':input[type="submit"]').prop('disabled', true);
     });
 });
 
-$("#symbol").focusout(function(){
-    var value = $( this ).val();
-    getSymbol(value);
-});
-
-function getSymbol (symbol){
-    socket.emit('symbolLookup',symbol)
+function getSymbol(symbol) {
+    socket.emit('symbolLookup', symbol)
+    console.log(symbol)
 };
 
+var toValidate = $('#buy_analysts, #strong_buy, #symbol'),
+    valid = false;
 
-socket.on('new-player', function (data) {
-    console.log(data)
-    player = data[0].id;
-    className = "." + (data[0].id).toString()
-    if ($(className)[0]) {
-        $(".col " + data[0].id).html(`
-    <h2 class="name">` + data[0].title + `</h2>
-    <h1 class="name">` + data[0].first_name + ' ' + data[0].last_name + `</h1>
-`)
+toValidate.keyup(function () {
+    if (jQuery(this).val().length > 0) {
+        jQuery(this).data('valid', true);
     } else {
-        $(".add-player").append(`<div class="row">
-    <div class="col ` + data[0].id + `">
-        <h2 class="name">` + data[0].title + `</h2>
-        <h1 class="name">` + data[0].first_name + ' ' + data[0].last_name + `</h1>
-    </div>
-</div>`)
+        jQuery(this).data('valid', false);
+    }
+    toValidate.each(function () {
+        if (jQuery(this).data('valid') == true) {
+            valid = true;
+        } else {
+            valid = false;
+        }
+    });
+    if (valid === true) {
+        jQuery("#Submit").prop('disabled', false);
+    } else {
+        jQuery("#Submit").prop('disabled', true);
     }
 });

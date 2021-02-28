@@ -24,11 +24,10 @@ def welcome():
 def check():
     req = request.form
     result = iexStocks.getFinancials(req['symbol'].upper(),req['pe'])
-    print(result)
-    print(req)
-    
-    # print(result)
-    return render_template("check.html",result=result,form=req)
+    if result['status'] == 'success':
+        return render_template("check.html",result=result,form=req)
+    else:
+        return render_template("error.html", result=result)
 
 @app.route("/result",methods=["POST"])
 def result():
@@ -47,4 +46,4 @@ def symbolLookup(data):
 
 if __name__ == "__main__":
     socketio.run(app, debug=True)
-    # app.run(debug=True)
+    

@@ -23,8 +23,9 @@ def getFinancials(symbol,pe):
     result['yield'] = information.loc[symbol].dividendYield
     result['bookValue'] = bookValue(financials.iloc[0].shareholderEquity,pe,information.loc[symbol].sharesOutstanding)
     result['opMargin'] = operatingMargin(financials.iloc[0].operatingIncome,financials.iloc[0].revenue)
-    result['4yrPrice'] = historic.loc[fourYearsAgo.strftime('%Y-%m-%d')].close
+    result['yrPrice'] = historic.loc[fourYearsAgo.strftime('%Y-%m-%d')].close
     result['description'] = companyDesc.loc[symbol].description
+    result['symbol'] = symbol
     return result
 
 def bookValue(se,pe,cs):

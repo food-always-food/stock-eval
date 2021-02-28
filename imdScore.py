@@ -1,5 +1,4 @@
-
-def score(cp,op,bv,bu,sb,yd,om,dv,pe):
+def score(cp, op, bv, bu, sb, yd, om, dv, pe):
 
     if cp < 1:
         cps = 1
@@ -42,20 +41,20 @@ def score(cp,op,bv,bu,sb,yd,om,dv,pe):
         ops = 9
     else:
         ops = 10
-    
+
     if op == 0:
         pcs = 0
-    elif cp < (0.505*op):
+    elif cp < (0.505 * op):
         pcs = 1
-    elif cp < (0.895*op):
+    elif cp < (0.895 * op):
         pcs = 2
-    elif cp < (0.995*op):
+    elif cp < (0.995 * op):
         pcs = 5
-    elif cp > (0.9949*op) and cp < (1.0149*op):
+    elif cp > (0.9949 * op) and cp < (1.0149 * op):
         pcs = 6
-    elif cp < (1.1049*op):
+    elif cp < (1.1049 * op):
         pcs = 7
-    elif cp < (1.9949*op):
+    elif cp < (1.9949 * op):
         pcs = 9
     else:
         pcs = 10
@@ -81,17 +80,17 @@ def score(cp,op,bv,bu,sb,yd,om,dv,pe):
     else:
         bvs = 10
 
-    if cp < (0.4949*bv):
+    if cp < (0.4949 * bv):
         bps = 10
-    elif cp < (0.895*bv):
+    elif cp < (0.895 * bv):
         bps = 8
-    elif cp < (0.995*bv):
+    elif cp < (0.995 * bv):
         bps = 6
-    elif cp < (1.0149*bv):
+    elif cp < (1.0149 * bv):
         bps = 4
-    elif cp < (1.0949*bv):
+    elif cp < (1.0949 * bv):
         bps = 2
-    elif cp < (1.4949*bv):
+    elif cp < (1.4949 * bv):
         bps = 1
     else:
         bps = 0
@@ -117,7 +116,7 @@ def score(cp,op,bv,bu,sb,yd,om,dv,pe):
         sbs = 5
 
     if yd == 0:
-        yds = 0 
+        yds = 0
     elif yd < 1.5:
         yds = 1
     elif yd < 2.5:
@@ -151,7 +150,7 @@ def score(cp,op,bv,bu,sb,yd,om,dv,pe):
         oms = 9
     else:
         oms = 10
-    
+
     if dv < 10001:
         dvs = 0
     elif dv < 30001:
@@ -161,16 +160,16 @@ def score(cp,op,bv,bu,sb,yd,om,dv,pe):
     elif dv < 100001:
         dvs = 3
     elif dv < 250001:
-        dvs = 4 
+        dvs = 4
     elif dv < 500001:
         dvs = 5
     elif dv < 750001:
         dvs = 6
     elif dv < 1000001:
-        dvs = 8 
+        dvs = 8
     elif dv < 2000001:
         dvs = 9
-    else: 
+    else:
         dvs = 10
 
     if pe < 1:
@@ -196,4 +195,3 @@ def score(cp,op,bv,bu,sb,yd,om,dv,pe):
 
     total = cps + ops + pcs + bvs + bps + bus + sbs + yds + oms + dvs + pes
     return total
-    

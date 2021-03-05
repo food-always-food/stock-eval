@@ -12,3 +12,11 @@ h1 h2 h3 {
 #middle {
     text-align: center;
 }
+
+#notification {
+    background: #1abc9c;
+    border-radius: 2px;
+    color: #f5f5f5;
+    font-weight: bold;
+    padding: 2px 4px;
+}

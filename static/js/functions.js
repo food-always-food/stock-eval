@@ -32,12 +32,19 @@ function getSymbol(symbol) {
 socket.on('symbol', function (data) {
     console.log(data)
     if (data != false) {
-        $('#result').html("<div class='row'>"+JSON.stringify(data)+"</div>")
+        $('#result').html(`<div class='row'>
+        <div class='col' id='notification'>
+        Company: ${data[0].company_name}<br>
+        Last Evaluated: ${data[0].age} ago<br>
+        Score: ${data[0].score}
+        </div></div><br>`)
     } else {
         $('#result').html('')
     }
-    
-}) 
+
+})
+
+// ${JSON.stringify(data)}
 
 var toValidate = $('#buy_analysts, #strong_buy, #symbol'),
     valid = false;

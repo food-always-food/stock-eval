@@ -16,6 +16,7 @@ def getFinancials(symbol, pe):
         stockInformation = Stock(symbol, token=token)
         financials = stockInformation.get_financials(period="annual")
         quote = stockInformation.get_quote()
+        print(quote)
         information = stockInformation.get_key_stats()
         companyDesc = stockInformation.get_company()
         result["price"] = quote.loc[symbol].latestPrice

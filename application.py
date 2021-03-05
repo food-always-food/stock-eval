@@ -29,7 +29,8 @@ def check():
     if symbolCheck == False:
         result = iexStocks.getFinancials(req["symbol"].upper(), req["pe"])
         print(result)
-        database.storeResult(
+        if result["status"] == "success":
+            database.storeResult(
             result["price"],
             result["yrPrice"],
             result["bookValue"],
@@ -43,7 +44,6 @@ def check():
             f"$tag${result['company']}$tag$",
             f"$tag${result['description']}$tag$",
         )
-        if result["status"] == "success":
             return render_template("check.html", result=result, form=req)
         else:
             return render_template("error.html", result=result)

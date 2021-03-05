@@ -26,7 +26,18 @@ $(document).ready(function () {
 function getSymbol(symbol) {
     socket.emit('symbolLookup', symbol)
     console.log(symbol)
+
 };
+
+socket.on('symbol', function (data) {
+    console.log(data)
+    if (data != false) {
+        $('#result').html("<div class='row'>"+JSON.stringify(data)+"</div>")
+    } else {
+        $('#result').html('')
+    }
+    
+}) 
 
 var toValidate = $('#buy_analysts, #strong_buy, #symbol'),
     valid = false;

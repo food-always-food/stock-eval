@@ -1,6 +1,6 @@
 from flask import render_template, session, request, redirect, Flask
 from flask_socketio import SocketIO, emit, send, join_room
-import imdScore, iexStocks
+import imdScore, iexStocks, database
 
 application = Flask(__name__)
 # application.config['SECRET_KEY'] = os.environ['SECRET_KEY']
@@ -25,16 +25,48 @@ def welcome():
 @app.route("/check", methods=["POST", "GET"])
 def check():
     req = request.form
-    result = iexStocks.getFinancials(req["symbol"].upper(), req["pe"])
-    if result["status"] == "success":
-        return render_template("check.html", result=result, form=req)
+    symbolCheck = database.lookupSymbol(req["symbol"].upper())
+    if symbolCheck == False:
+        result = iexStocks.getFinancials(req["symbol"].upper(), req["pe"])
+        database.storeResult(
+            result["price"],
+            result["yrPrice"],
+            result["bookValue"],
+            req["buy_analysts"],
+            req["strong_buy"],
+            result["yield"],
+            result["opMargin"],
+            result["volume"],
+            result["peRatio"],
+            result["symbol"],
+        )
+        if result["status"] == "success":
+            return render_template("check.html", result=result, form=req)
+        else:
+            return render_template("error.html", result=result)
     else:
-        return render_template("error.html", result=result)
+        result = symbolCheck[0]
+        result["price"] = result["cp"]
+        result["yrPrice"] = result["op"]
+        result["bookValue"] = result["bv"]
+        result["yield"] = result["yd"]
+        result["opMargin"] = result["om"]
+        result["volume"] = result["dv"]
+        result["peRatio"] = result["pe"]
+        result["description"] = result['age']
+        result["company"] = "FIX ME"
+        result["status"] = "success"
+        result["database"] = "historical"
+        if result["status"] == "success":
+            return render_template("check.html", result=result, form=req)
+        else:
+            return render_template("error.html", result=result)
 
 
 @app.route("/result", methods=["POST"])
 def result():
     req = request.form
+    database.storeResult
     result = imdScore.score(
         float(req["stock-price"]),
         float(req["4-years"]),
@@ -57,7 +89,8 @@ def connect():
 
 @socketio.on("symbolLookup")
 def symbolLookup(data):
-    print(data)
+    result = database.lookupSymbol(data.upper())
+    emit("symbol", result)
 
 
 if __name__ == "__main__":

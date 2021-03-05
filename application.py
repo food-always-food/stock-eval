@@ -28,6 +28,7 @@ def check():
     symbolCheck = database.lookupSymbol(req["symbol"].upper())
     if symbolCheck == False:
         result = iexStocks.getFinancials(req["symbol"].upper(), req["pe"])
+        print(f"$tag${result['description']}$tag$")
         database.storeResult(
             result["price"],
             result["yrPrice"],
@@ -39,6 +40,8 @@ def check():
             result["volume"],
             result["peRatio"],
             result["symbol"],
+            f"$tag${result['company']}$tag$",
+            f"$tag${result['description']}$tag$",
         )
         if result["status"] == "success":
             return render_template("check.html", result=result, form=req)
@@ -53,7 +56,7 @@ def check():
         result["opMargin"] = result["om"]
         result["volume"] = result["dv"]
         result["peRatio"] = result["pe"]
-        result["description"] = result['age']
+        result["description"] = result["age"]
         result["company"] = "FIX ME"
         result["status"] = "success"
         result["database"] = "historical"
@@ -89,8 +92,23 @@ def connect():
 
 @socketio.on("symbolLookup")
 def symbolLookup(data):
-    result = database.lookupSymbol(data.upper())
-    emit("symbol", result)
+    resultList = database.lookupSymbol(data.upper())
+    if resultList != False:
+        result = resultList[0]
+        score = imdScore.score(
+            float(result["cp"]),
+            float(result["op"]),
+            float(result["bv"]),
+            float(result["bu"]),
+            float(result["sb"]),
+            float(result["yd"]),
+            float(result["om"]),
+            float(result["dv"]),
+            float(result["pe"]),
+        )
+        resultList[0]["score"] = score
+        print(result)
+        emit("symbol", resultList)
 
 
 if __name__ == "__main__":

@@ -12,8 +12,7 @@ def lookupSymbol(symbol):
     stmt = f"""SELECT cp,op,bv,bu,sb,yd,om,dv,pe,symbol,to_char(created_at,'DD Mon YYYY HH12:MI:SS ') as date,
     extract(day from AGE(NOW(),created_at))||' Days '||
     extract(hour from AGE(NOW(),created_at))||' Hours '||
-    extract(minute from AGE(NOW(),created_at))||' Minutes' as age,
-    company_name, company_desc FROM {table} WHERE symbol = '{symbol}' ORDER BY created_at DESC"""
+    extract(minute from AGE(NOW(),created_at))||' Minutes' as age, company_name, company_desc FROM {table} WHERE symbol = '{symbol}' ORDER BY created_at DESC"""
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
     cur.execute(stmt)
     result = cur.fetchall()

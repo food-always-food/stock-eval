@@ -18,7 +18,7 @@ def getFinancials(symbol, pe):
         quote = stockInformation.get_quote()
         information = stockInformation.get_key_stats()
         companyDesc = stockInformation.get_company()
-        result["price"] = quote.loc[symbol].close
+        result["price"] = quote.loc[symbol].latestPrice
         result["company"] = information.loc[symbol].companyName
         result["peRatio"] = information.loc[symbol].peRatio
         result["volume"] = information.loc[symbol].avg30Volume

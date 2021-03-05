@@ -28,7 +28,7 @@ def check():
     symbolCheck = database.lookupSymbol(req["symbol"].upper())
     if symbolCheck == False:
         result = iexStocks.getFinancials(req["symbol"].upper(), req["pe"])
-        print(f"$tag${result['description']}$tag$")
+        print(result)
         database.storeResult(
             result["price"],
             result["yrPrice"],

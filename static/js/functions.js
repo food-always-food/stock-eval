@@ -17,53 +17,74 @@ $(document).ready(function () {
         });
         $("#symbol").focusout(function () {
             var value = $("#symbol").val();
-            getSymbol(value);
+            // getSymbol(value);
+            symbolAjax(value);
         });
+
+        function getSymbol(symbol) {
+            socket.emit('symbolLookup', symbol)
+            console.log(symbol)
+        };
+
+        socket.on('symbol', function (data) {
+            console.log(data)
+            if (data != false) {
+                $('#result').html(`<div class='row'>
+                <div class='col' id='notification'>
+                Company: ${data[0].company_name}<br>
+                Last Evaluated: ${data[0].age} ago<br>
+                Score: ${data[0].score}
+                </div></div><br>`)
+            } else {
+                $('#result').html('')
+            }
+        });
+
+
         // $(':input[type="submit"]').prop('disabled', true);
     });
 });
 
-function getSymbol(symbol) {
-    socket.emit('symbolLookup', symbol)
-    console.log(symbol)
-};
+function symbolAjax(symbol) {
+    $.post("/api/symbolLookup", {
+        symbol: symbol
+    }, function (data, status) {
+        console.log(data)
+        if (data != false) {
+            $('#result').html(`<div class='row'>
+            <div class='col' id='notification'>
+            Company: ${data[0].company_name}<br>
+            Last Evaluated: ${data[0].age} ago<br>
+            Score: ${data[0].score}
+            </div></div><br>`)
+        } else {
+            $('#result').html('')
+        }
+    },"json")
+}
 
-socket.on('symbol', function (data) {
-    console.log(data)
-    if (data != false) {
-        $('#result').html(`<div class='row'>
-        <div class='col' id='notification'>
-        Company: ${data[0].company_name}<br>
-        Last Evaluated: ${data[0].age} ago<br>
-        Score: ${data[0].score}
-        </div></div><br>`)
-    } else {
-        $('#result').html('')
-    }
-
-})
 
 // ${JSON.stringify(data)}
 
-var toValidate = $('#buy_analysts, #strong_buy, #symbol'),
-    valid = false;
+// var toValidate = $('#buy_analysts, #strong_buy, #symbol'),
+//     valid = false;
 
-toValidate.keyup(function () {
-    if (jQuery(this).val().length > 0) {
-        jQuery(this).data('valid', true);
-    } else {
-        jQuery(this).data('valid', false);
-    }
-    toValidate.each(function () {
-        if (jQuery(this).data('valid') == true) {
-            valid = true;
-        } else {
-            valid = false;
-        }
-    });
-    if (valid === true) {
-        jQuery("#Submit").prop('disabled', false);
-    } else {
-        jQuery("#Submit").prop('disabled', true);
-    }
-});
+// toValidate.keyup(function () {
+//     if (jQuery(this).val().length > 0) {
+//         jQuery(this).data('valid', true);
+//     } else {
+//         jQuery(this).data('valid', false);
+//     }
+//     toValidate.each(function () {
+//         if (jQuery(this).data('valid') == true) {
+//             valid = true;
+//         } else {
+//             valid = false;
+//         }
+//     });
+//     if (valid === true) {
+//         jQuery("#Submit").prop('disabled', false);
+//     } else {
+//         jQuery("#Submit").prop('disabled', true);
+//     }
+// });

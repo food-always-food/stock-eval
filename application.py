@@ -1,4 +1,4 @@
-from flask import render_template, session, request, redirect, Flask
+from flask import render_template, session, request, redirect, Flask, jsonify
 from flask_socketio import SocketIO, emit, send, join_room
 import imdScore, iexStocks, database
 
@@ -83,6 +83,27 @@ def result():
     )
     print(result)
     return render_template("result.html", result=result)
+
+@app.route("/api/symbolLookup",methods=["POST"])
+def lookup():
+    symbol = request.form
+    resultList = database.lookupSymbol(symbol['symbol'].upper())
+    if resultList != False:
+        result = resultList[0]
+        score = imdScore.score(
+            float(result["cp"]),
+            float(result["op"]),
+            float(result["bv"]),
+            float(result["bu"]),
+            float(result["sb"]),
+            float(result["yd"]),
+            float(result["om"]),
+            float(result["dv"]),
+            float(result["pe"]),
+        )
+        resultList[0]["score"] = score
+        print(result)
+    return jsonify(resultList)
 
 
 @socketio.on("connect")

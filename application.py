@@ -108,7 +108,7 @@ def symbolLookup(data):
         )
         resultList[0]["score"] = score
         print(result)
-        emit("symbol", resultList)
+    emit("symbol", resultList)
 
 
 if __name__ == "__main__":

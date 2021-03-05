@@ -16,7 +16,7 @@ $(document).ready(function () {
           </div>`);
         });
         $("#symbol").focusout(function () {
-            var value = $(this).val();
+            var value = $("#symbol").val();
             getSymbol(value);
         });
         // $(':input[type="submit"]').prop('disabled', true);
@@ -26,7 +26,6 @@ $(document).ready(function () {
 function getSymbol(symbol) {
     socket.emit('symbolLookup', symbol)
     console.log(symbol)
-
 };
 
 socket.on('symbol', function (data) {

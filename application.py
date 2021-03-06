@@ -1,12 +1,11 @@
-from flask import render_template, session, request, redirect, Flask, jsonify
-from flask_socketio import SocketIO, emit, send, join_room
+from flask import render_template, session, request, redirect, Flask
 import imdScore, iexStocks, database
+import simplejson as json
 
 application = Flask(__name__)
 # application.config['SECRET_KEY'] = os.environ['SECRET_KEY']
 application.config["SECRET_KEY"] = "1023912038109823aljksdflkajds"
 app = application
-socketio = SocketIO(app, async_mode=None)
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -31,19 +30,19 @@ def check():
         print(result)
         if result["status"] == "success":
             database.storeResult(
-            result["price"],
-            result["yrPrice"],
-            result["bookValue"],
-            req["buy_analysts"],
-            req["strong_buy"],
-            result["yield"],
-            result["opMargin"],
-            result["volume"],
-            result["peRatio"],
-            result["symbol"],
-            f"$tag${result['company']}$tag$",
-            f"$tag${result['description']}$tag$",
-        )
+                result["price"],
+                result["yrPrice"],
+                result["bookValue"],
+                req["buy_analysts"],
+                req["strong_buy"],
+                result["yield"],
+                result["opMargin"],
+                result["volume"],
+                result["peRatio"],
+                result["symbol"],
+                f"$tag${result['company']}$tag$",
+                f"$tag${result['description']}$tag$",
+            )
             return render_template("check.html", result=result, form=req)
         else:
             return render_template("error.html", result=result)
@@ -84,10 +83,11 @@ def result():
     print(result)
     return render_template("result.html", result=result)
 
-@app.route("/api/symbolLookup",methods=["POST"])
+
+@app.route("/api/symbolLookup", methods=["POST"])
 def lookup():
     symbol = request.form
-    resultList = database.lookupSymbol(symbol['symbol'].upper())
+    resultList = database.lookupSymbol(symbol["symbol"].upper())
     if resultList != False:
         result = resultList[0]
         score = imdScore.score(
@@ -103,34 +103,8 @@ def lookup():
         )
         resultList[0]["score"] = score
         print(result)
-    return jsonify(resultList)
-
-
-@socketio.on("connect")
-def connect():
-    print("connected")
-
-
-@socketio.on("symbolLookup")
-def symbolLookup(data):
-    resultList = database.lookupSymbol(data.upper())
-    if resultList != False:
-        result = resultList[0]
-        score = imdScore.score(
-            float(result["cp"]),
-            float(result["op"]),
-            float(result["bv"]),
-            float(result["bu"]),
-            float(result["sb"]),
-            float(result["yd"]),
-            float(result["om"]),
-            float(result["dv"]),
-            float(result["pe"]),
-        )
-        resultList[0]["score"] = score
-        print(result)
-    emit("symbol", resultList)
+    return json.dumps(resultList)
 
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True)
+    app.run(debug=True)

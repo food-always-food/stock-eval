@@ -11,3 +11,6 @@ Need to add:
 - Ability to override historical financials and get fresh ones
 - News Scrape and identification of trending companies/symbols
 - Reddit scrape for the same
+- Export to CSV for Evaluated Stocks
+- Update to function in other non-us Exchanges (https://iexcloud.io/docs/api/#international-exchanges) Seems like real time quotes are not available on this API (https://intercom.help/iexcloud/en/articles/4063782-international-data) for anything but US stocks
+- Add ability to look up more than one stock at a time
